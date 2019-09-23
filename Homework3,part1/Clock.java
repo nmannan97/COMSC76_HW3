@@ -1,6 +1,11 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
+import javafx.stage.Window;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+
 import javafx.scene.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -10,10 +15,12 @@ import javafx.stage.Stage;
 import javafx.scene.text.*;
 import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
+import javafx.scene.input.*;
 
 import java.util.*;
 import java.time.*;
 import java.math.*;
+import javafx.util.Duration;
 /**
  * Write a description of JavaFX class Clock here.
  *
@@ -31,10 +38,19 @@ public class Clock extends Application
     private int timeHour = 0;
     private int timeMin = 0;
     private int timeSec = 0;
+    private Line hour = new Line(50, 50, 
+                                (50 + 50*(Math.cos(hour()))), 
+                                (50 + 50*(Math.sin(hour()))));
+    private Line min = new Line(50, 50, 
+                                50 + 70*(Math.cos(min())), 
+                                50 + 70*(Math.sin(min())));
+    private Line sec = new Line(50, 50, 
+                                50 + 85*Math.cos(sec()), 
+                                50 + 85*Math.sin(sec()));
     @Override
     public void start(Stage stage)
     {
-        // Create a new grid pane
+        // Create a new grid pane        
         GridPane pane = new GridPane();
         pane.setPadding(new Insets(10, 10, 10, 10));
         pane.setMinSize(300, 300);
@@ -70,42 +86,57 @@ public class Clock extends Application
         {
             time[i] = new Text(45 + 70*(Math.cos(((double)i/12)*2*Math.PI - Math.PI/3)),
                                50 + 70*(Math.sin(((double)i/12)*2*Math.PI - Math.PI/3)),
-                                Integer.toString(i+1));
+                               Integer.toString(i+1));
             root.getChildren().add(time[i]);
         }
         //Making the hands of the clock
-        Line hour = new Line(50, 50, 
-                             (50 + 50*(Math.cos(hour()))), 
-                             (50 + 50*(Math.sin(hour()))));
-        Line min = new Line(50, 50, 
-                             50 + 70*(Math.cos(min())), 
-                             50 + 70*(Math.sin(min())));
+        
+        
+        sec.setStroke(Color.RED);                     
         min.setStroke(Color.GREEN);
         
-        Line sec = new Line(50, 50, 
-                             50 + 85*Math.cos(sec()), 
-                             50 + 85*Math.sin(sec()));
-        sec.setStroke(Color.RED);                     
-             
         root.getChildren().add(sec);
         root.getChildren().add(hour);
         root.getChildren().add(min);
         // JavaFX must have a Scene (window content) inside a Stage (window)
+        
+        pane.getChildren().add(root);
+        /**scene.addEventHandler(WindowEvent.WINDOW_SHOWING, 
+                new EventHandler<WindowEvent>(){
+                    public void handle(WindowEvent w){
+                        Line sec = new Line(50, 50, 
+                             50 + 85*Math.cos(sec()), 
+                             50 + 85*Math.sin(sec()));
+                    }
+                });
+        **/
+        // Show the Stage (window)
+
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>()
+        {
+            public void handle(MouseEvent e) {
+                root.getChildren().remove(sec);
+                Line sec = new Line(50, 50, 
+                                50 + 85*Math.cos(sec()), 
+                                50 + 85*Math.sin(sec()));
+                root.getChildren().add(sec);
+            }
+        };
         Scene scene = new Scene(pane, 300,300);
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);  
+        /*Timeline animation = new Timeline(
+            new KeyFrame(Duration.millis(1000),
+            eventHandler));*/
+            
+        //animation.setCycleCount(Timeline.INDEFINITE);
+        //animation.play();
+        
         stage.setTitle("Clock");
         stage.setScene(scene);
-        pane.getChildren().add(root);
-        
-        // Show the Stage (window)
+
+        stage.setTitle("ClockAnimation"); // Set the stage title 29     
         stage.show();
         stage.toFront();
-        while(stage.isAlwaysOnTop()){
-           sec = new Line(50, 50, 
-                       50 + 85*Math.cos(sec()), 
-                       50 + 85*Math.sin(sec()));
-            //stage.show();
-           root.getChildren().add(sec);
-        }
     }
     private double hour()
     {
