@@ -8,7 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
+import java.lang.Math;
 /**
  * Write a description of JavaFX class Setup here.
  *
@@ -20,7 +22,11 @@ public class Setup extends Application
     // We keep track of the count, and label displaying the count:
     private int count = 0;
     private Label myLabel = new Label("0");
-
+    private int row = 0;
+    private double years = 0;
+    private double Rate = 0;
+    private double amount = 0;
+    private double Value = 0;
     /**
      * The start method is the main entry point for every JavaFX application. 
      * It is called after the init() method has returned and after 
@@ -31,10 +37,12 @@ public class Setup extends Application
     @Override
     public void start(Stage stage)
     {
+        final TextField year = new TextField();
+        final TextField investment = new TextField();
+        final TextField rate = new TextField();
+        final TextField value = new TextField();
         // Create a Button or any control item
         Button myButton = new Button("Count");
-        final TextField investment = new TextField();
-        
         // Create a new grid pane
         GridPane pane = new GridPane();
         pane.setPadding(new Insets(10, 10, 10, 10));
@@ -45,13 +53,41 @@ public class Setup extends Application
         investment.setPromptText("Investment amounts");
         investment.setPrefColumnCount(10);
         investment.getText();
-        GridPane.setConstraints(investment, 0, 0);
-        //set an action on the button using method reference
-        myButton.setOnAction(this::buttonClick);
+        GridPane.setConstraints(investment, 0, row);
+        pane.getChildren().add(investment);
+        row = row + 1;
+            //Years investing 
+        year.setPromptText("year amount");
+        year.setPrefColumnCount(10);
+        year.getText();
+        GridPane.setConstraints(year, 0, row);
+        pane.getChildren().add(year);
+        row = row + 1;
+        //
 
+            //Rate
+        rate.setPromptText("rate amount");
+        rate.setPrefColumnCount(10);
+        rate.getText();
+        GridPane.setConstraints(rate, 0, row);
+        pane.getChildren().add(rate);
+        //
+        row = row + 1;
+            //Value        
+        //set an action on the button using method reference
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
+            @Override 
+            public void handle(MouseEvent e){
+                amount = Double.valueOf(investment.getText());
+                years = Double.valueOf(year.getText());
+                Rate = Double.valueOf(rate.getText());
+            }
+        };
+        myButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+        myButton.setOnAction(this::buttonClick);
         // Add the button and label into the pane
         pane.add(myLabel, 1, 0);
-        pane.add(myButton, 0, 0);
+        pane.add(myButton, 0, row);
 
         // JavaFX must have a Scene (window content) inside a Stage (window)
         Scene scene = new Scene(pane, 300,100);
@@ -61,7 +97,6 @@ public class Setup extends Application
         // Show the Stage (window)
         stage.show();
     }
-
     /**
      * This will be executed when the button is clicked
      * It increments the count by 1
@@ -69,7 +104,8 @@ public class Setup extends Application
     private void buttonClick(ActionEvent event)
     {
         // Counts number of button clicks and shows the result on a label
-        count = count + 1;
-        myLabel.setText(Integer.toString(count));
+        Value = Math.pow((1+Rate),12*years);
+        Value = Value*amount;
+        myLabel.setText("" + Value);
     }
 }
