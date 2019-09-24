@@ -112,20 +112,31 @@ public class Clock extends Application
         **/
         // Show the Stage (window)
 
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>()
+        EventHandler<WindowEvent> eventHandler = new EventHandler<WindowEvent>()
         {
-            public void handle(MouseEvent e) {
+            @Override
+            public void handle(WindowEvent e) {
                  /*sec = new Line(50, 50, 
                                50 + 85*Math.cos(sec()), 
                                50 + 85*Math.sin(sec()));*/
+                now = new GregorianCalendar(); 
+                
                 timeSec = now.get(Calendar.SECOND);
+                timeHour = now.get(Calendar.HOUR);
+                timeMin = now.get(Calendar.MINUTE);
+                
+                hour.setEndX(50 + 50*Math.cos(hour()));
+                hour.setEndY(50 + 50*Math.sin(hour()));
+                
+                min.setEndX(50 + 70*Math.cos(hour()));
+                min.setEndY(50 + 70*Math.sin(hour()));
+                
                 sec.setEndX(50 + 85*Math.cos(sec()));
-                System.out.println(50 + 85*Math.cos(sec()));
                 sec.setEndY(50 + 85*Math.sin(sec()));
             }
         };
         Scene scene = new Scene(pane, 300,300);
-        scene.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);  
+        scene.addEventHandler(WindowEvent.WINDOW_SHOWING, eventHandler);  
         /*Timeline animation = new Timeline(
             new KeyFrame(Duration.millis(1000),
             eventHandler));*/
@@ -142,14 +153,13 @@ public class Clock extends Application
     }
     private double hour()
     {
-        timeHour = now.get(Calendar.HOUR);
-        double angle = ((double)timeHour/12)*2*Math.PI - Math.PI/2;
+        
+        double angle = ((double)this.timeHour/12)*2*Math.PI - Math.PI/2;
         return angle;
     }
     private double min()
     {
-        timeMin = now.get(Calendar.MINUTE);
-        double angle = ((double)timeMin/60)*2*Math.PI - Math.PI/2;
+        double angle = ((double)this.timeMin/60)*2*Math.PI - Math.PI/2;
         return angle;
     }
     private double sec()
