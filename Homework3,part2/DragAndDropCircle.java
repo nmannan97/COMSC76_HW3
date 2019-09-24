@@ -11,6 +11,8 @@ import javafx.scene.input.*;
 import javafx.scene.shape.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.Text;
+
+import java.lang.Math;
 /**
  * Write a description of JavaFX class DragAndDropCircle here.
  *
@@ -23,7 +25,8 @@ public class DragAndDropCircle extends Application
     private int count = 0;
     private Label myLabel = new Label("0");
     private Line distance = new Line();
-    private Text val = new Text();
+    private Text val = new Text(0,0,"Distance: 80sqrt(2)");
+    private double dis = 0;
     /**
      * The start method is the main entry point for every JavaFX application. 
      * It is called after the init() method has returned and after 
@@ -59,7 +62,10 @@ public class DragAndDropCircle extends Application
                 circle1.setCenterY(e.getY());
                 distance.setStartX(circle1.getCenterX());
                 distance.setStartY(circle1.getCenterY());
-                
+                dis = Math.sqrt(
+                    Math.pow(circle1.getCenterX()-circle2.getCenterX(),2)+
+                    Math.pow(circle1.getCenterY()-circle2.getCenterY(),2));
+                val.setText("Distance: "  + String.valueOf(dis));
                 /* put a string on dragboard */
             });
         circle2.setOnMouseDragged(e-> {
@@ -70,7 +76,12 @@ public class DragAndDropCircle extends Application
                 circle2.setCenterY(e.getY());
                 distance.setEndX(circle2.getCenterX());
                 distance.setEndY(circle2.getCenterY());
+                
+                dis = Math.sqrt(
+                    Math.pow(circle1.getCenterX()-circle2.getCenterX(),2)+
+                    Math.pow(circle1.getCenterY()-circle2.getCenterY(),2));
                 /* put a string on dragboard */
+                val.setText("Distance: " + String.valueOf(dis));
             });
         // Create a new grid pane
         GridPane pane = new GridPane();
@@ -82,6 +93,7 @@ public class DragAndDropCircle extends Application
         root.getChildren().add(circle2);
         root.getChildren().add(circle1);
         root.getChildren().add(distance);
+        root.getChildren().add(val);
         // JavaFX must have a Scene (window content) inside a Stage (window)
         pane.getChildren().add(root);
         Scene scene = new Scene(pane, 300,100);
