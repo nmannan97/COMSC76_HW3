@@ -35,8 +35,8 @@ public class Clock extends Application
     private Line[] ticks = new Line[60];
     private Line[] tickCover = new Line[60];
     private Calendar now = new GregorianCalendar();
-    private int timeHour = 0;
-    private int timeMin = 0;
+    private int timeHour = now.get(Calendar.HOUR);
+    private int timeMin = now.get(Calendar.MINUTE);
     private int timeSec = now.get(Calendar.SECOND);
     private Line hour = new Line(50, 50, 
                                 (50 + 50*(Math.cos(hour()))), 
@@ -112,13 +112,10 @@ public class Clock extends Application
         **/
         // Show the Stage (window)
 
-        EventHandler<WindowEvent> eventHandler = new EventHandler<WindowEvent>()
+        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>()
         {
             @Override
-            public void handle(WindowEvent e) {
-                 /*sec = new Line(50, 50, 
-                               50 + 85*Math.cos(sec()), 
-                               50 + 85*Math.sin(sec()));*/
+            public void handle(MouseEvent e) {
                 now = new GregorianCalendar(); 
                 
                 timeSec = now.get(Calendar.SECOND);
@@ -128,15 +125,15 @@ public class Clock extends Application
                 hour.setEndX(50 + 50*Math.cos(hour()));
                 hour.setEndY(50 + 50*Math.sin(hour()));
                 
-                min.setEndX(50 + 70*Math.cos(hour()));
-                min.setEndY(50 + 70*Math.sin(hour()));
+                min.setEndX(50 + 70*Math.cos(min()));
+                min.setEndY(50 + 70*Math.sin(min()));
                 
                 sec.setEndX(50 + 85*Math.cos(sec()));
                 sec.setEndY(50 + 85*Math.sin(sec()));
             }
         };
         Scene scene = new Scene(pane, 300,300);
-        scene.addEventHandler(WindowEvent.WINDOW_SHOWING, eventHandler);  
+        scene.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);  
         /*Timeline animation = new Timeline(
             new KeyFrame(Duration.millis(1000),
             eventHandler));*/
@@ -150,10 +147,10 @@ public class Clock extends Application
         stage.setTitle("ClockAnimation"); // Set the stage title 29     
         stage.show();
         stage.toFront();
+        
     }
     private double hour()
-    {
-        
+    {        
         double angle = ((double)this.timeHour/12)*2*Math.PI - Math.PI/2;
         return angle;
     }
