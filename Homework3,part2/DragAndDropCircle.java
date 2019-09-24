@@ -10,7 +10,7 @@ import javafx.stage.*;
 import javafx.scene.input.*;
 import javafx.scene.shape.*;
 import javafx.scene.paint.*;
-
+import javafx.scene.text.Text;
 /**
  * Write a description of JavaFX class DragAndDropCircle here.
  *
@@ -23,6 +23,7 @@ public class DragAndDropCircle extends Application
     private int count = 0;
     private Label myLabel = new Label("0");
     private Line distance = new Line();
+    private Text val = new Text();
     /**
      * The start method is the main entry point for every JavaFX application. 
      * It is called after the init() method has returned and after 
@@ -36,7 +37,7 @@ public class DragAndDropCircle extends Application
         // Create a Button or any control item
         Circle circle1 = new Circle( 40,  40, 10);
         Circle circle2 = new Circle(120, 120, 10);
-        Group root = new Group();
+        
         distance.setStartX(circle1.getCenterX());
         distance.setStartY(circle1.getCenterY());
         
@@ -49,6 +50,7 @@ public class DragAndDropCircle extends Application
         circle2.setFill(Color.TRANSPARENT);
         circle2.setStroke(Color.BLACK);
         
+        Group root = new Group();
         circle1.setOnMouseDragged(e-> {
                 /* drag was detected, start drag-and-drop gesture*/
                 
