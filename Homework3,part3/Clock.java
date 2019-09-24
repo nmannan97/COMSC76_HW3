@@ -37,7 +37,7 @@ public class Clock extends Application
     private Calendar now = new GregorianCalendar();
     private int timeHour = 0;
     private int timeMin = 0;
-    private int timeSec = 0;
+    private int timeSec = now.get(Calendar.SECOND);
     private Line hour = new Line(50, 50, 
                                 (50 + 50*(Math.cos(hour()))), 
                                 (50 + 50*(Math.sin(hour()))));
@@ -115,15 +115,17 @@ public class Clock extends Application
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>()
         {
             public void handle(MouseEvent e) {
-                root.getChildren().remove(sec);
-                Line sec = new Line(50, 50, 
-                                50 + 85*Math.cos(sec()), 
-                                50 + 85*Math.sin(sec()));
-                root.getChildren().add(sec);
+                 /*sec = new Line(50, 50, 
+                               50 + 85*Math.cos(sec()), 
+                               50 + 85*Math.sin(sec()));*/
+                timeSec = now.get(Calendar.SECOND);
+                sec.setEndX(50 + 85*Math.cos(sec()));
+                System.out.println(50 + 85*Math.cos(sec()));
+                sec.setEndY(50 + 85*Math.sin(sec()));
             }
         };
         Scene scene = new Scene(pane, 300,300);
-        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);  
+        scene.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);  
         /*Timeline animation = new Timeline(
             new KeyFrame(Duration.millis(1000),
             eventHandler));*/
@@ -152,8 +154,7 @@ public class Clock extends Application
     }
     private double sec()
     {
-        this.timeSec = now.get(Calendar.SECOND);
-        double angle = ((double)timeSec/60)*2*Math.PI - Math.PI/2;
+        double angle = ((double)this.timeSec/60)*2*Math.PI - Math.PI/2;
         return angle;
     }
 }
