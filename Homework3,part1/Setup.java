@@ -42,7 +42,7 @@ public class Setup extends Application
         final TextField rate = new TextField();
         final TextField value = new TextField();
         // Create a Button or any control item
-        Button myButton = new Button("Count");
+        Button myButton = new Button("Calculate");
         // Create a new grid pane
         GridPane pane = new GridPane();
         pane.setPadding(new Insets(10, 10, 10, 10));
@@ -79,12 +79,15 @@ public class Setup extends Application
             @Override 
             public void handle(MouseEvent e){
                 amount = Double.valueOf(investment.getText());
+                System.out.println(amount);
                 years = Double.valueOf(year.getText());
+                System.out.println(years);
                 Rate = Double.valueOf(rate.getText());
+                System.out.println(years);
             }
         };
-        myButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
         myButton.setOnAction(this::buttonClick);
+        myButton.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);
         // Add the button and label into the pane
         pane.add(myLabel, 1, 0);
         pane.add(myButton, 0, row);
@@ -106,6 +109,7 @@ public class Setup extends Application
         // Counts number of button clicks and shows the result on a label
         Value = Math.pow((1+Rate),12*years);
         Value = Value*amount;
-        myLabel.setText("" + Value);
+        System.out.println(Value);
+        myLabel.setText("Final amount: " + Value);
     }
 }
