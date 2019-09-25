@@ -47,6 +47,9 @@ public class Clock extends Application
     private Line sec = new Line(50, 50, 
                                 50 + 85*Math.cos(sec()), 
                                 50 + 85*Math.sin(sec()));
+    private Button start = new Button("Start");
+    private Button stop = new Button("Stop");
+    private boolean active = true;
     @Override
     public void start(Stage stage)
     {
@@ -62,6 +65,8 @@ public class Clock extends Application
                                     + now.get(Calendar.HOUR) + ":" +
                                     now.get(Calendar.MINUTE) + ":" +
                                     + now.get(Calendar.SECOND) ); 
+        start.setLayoutX(0);
+        start.setLayoutY(250);
         //setting up the clock
         clock.setFill(Color.TRANSPARENT);
         clock.setStroke(Color.BLACK);
@@ -91,7 +96,6 @@ public class Clock extends Application
         }
         //Making the hands of the clock
         
-        
         sec.setStroke(Color.RED);                     
         min.setStroke(Color.GREEN);
         
@@ -101,6 +105,8 @@ public class Clock extends Application
         // JavaFX must have a Scene (window content) inside a Stage (window)
         
         pane.getChildren().add(root);
+        pane.add(start,0,1);
+        pane.add(stop ,1,1);
         /**scene.addEventHandler(WindowEvent.WINDOW_SHOWING, 
                 new EventHandler<WindowEvent>(){
                     public void handle(WindowEvent w){
@@ -111,41 +117,60 @@ public class Clock extends Application
                 });
         **/
         // Show the Stage (window)
-
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>()
+        EventHandler<MouseEvent> startHandler = new EventHandler<MouseEvent>()
         {
-            @Override
+            @Override 
             public void handle(MouseEvent e) {
-                now = new GregorianCalendar(); 
-                
-                timeSec = now.get(Calendar.SECOND);
-                timeHour = now.get(Calendar.HOUR);
-                timeMin = now.get(Calendar.MINUTE);
-                
-                hour.setEndX(50 + 50*Math.cos(hour()));
-                hour.setEndY(50 + 50*Math.sin(hour()));
-                
-                min.setEndX(50 + 70*Math.cos(min()));
-                min.setEndY(50 + 70*Math.sin(min()));
-                
-                sec.setEndX(50 + 85*Math.cos(sec()));
-                sec.setEndY(50 + 85*Math.sin(sec()));
+                active = true;
             }
         };
+        EventHandler<MouseEvent> stopHandler = new EventHandler<MouseEvent>()
+        {
+            @Override 
+            public void handle(MouseEvent e) {
+                active = false;
+            }
+        };
+        start.addEventHandler(MouseEvent.MOUSE_CLICKED, startHandler);
+        stop.addEventHandler(MouseEvent.MOUSE_CLICKED, stopHandler);
+        EventHandler<ActionEvent> eventHandler = e->
+        {
+                if(active){
+                    now = new GregorianCalendar(); 
+                
+                    timeSec = now.get(Calendar.SECOND);
+                    timeHour = now.get(Calendar.HOUR);
+                    timeMin = now.get(Calendar.MINUTE);
+                
+                    hour.setEndX(50 + 50*Math.cos(hour()));
+                    hour.setEndY(50 + 50*Math.sin(hour()));
+                
+                    min.setEndX(50 + 70*Math.cos(min()));
+                    min.setEndY(50 + 70*Math.sin(min()));
+                
+                    sec.setEndX(50 + 85*Math.cos(sec()));
+                    sec.setEndY(50 + 85*Math.sin(sec()));
+                    currentTime.setText("Current time: " 
+                                    + now.get(Calendar.HOUR) + ":" +
+                                    now.get(Calendar.MINUTE) + ":" +
+                                    + now.get(Calendar.SECOND) );
+                }
+        };
         Scene scene = new Scene(pane, 300,300);
-        scene.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);  
-        /*Timeline animation = new Timeline(
+        //scene.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandler);  
+        Timeline animation = new Timeline(
             new KeyFrame(Duration.millis(1000),
-            eventHandler));*/
+            eventHandler));
             
-        //animation.setCycleCount(Timeline.INDEFINITE);
-        //animation.play();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.play();
         
         stage.setTitle("Clock");
         stage.setScene(scene);
 
-        stage.setTitle("ClockAnimation"); // Set the stage title 29     
+        stage.setTitle("ClockAnimation"); // Set the stage title 29
         stage.show();
+
         stage.toFront();
         
     }
